@@ -27,7 +27,9 @@ namespace BetaOne
         {
             string errCode = (toLog.code == ReturnCodes.OK ? "" : "["+toLog.code.ToString()+"]");
             string contentSize = (toLog.content == null ? "" : "[Len: " + toLog.content.Length.ToString()+"]");
-            Console.WriteLine(String.Format($"[{from} -> {target}]".Pastel(Color.Gray) +  $" {toLog.name} {contentSize} {errCode}"));
+            string reqID = ((toLog.requestId != null && toLog.requestId != 0) ? "[Req: " + toLog.requestId.ToString() + "]" : "");
+
+            Console.WriteLine(String.Format($"[{from} -> {target}]".Pastel(Color.Gray) +  $" {toLog.name} {contentSize} {errCode} {reqID}"));
         }
 
 

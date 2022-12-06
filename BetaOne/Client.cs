@@ -14,18 +14,18 @@ namespace BetaOne
 {
     internal class Client
     {
-        bool disableDebug = true;
+        bool disableDebug = false;
 
         StreamWriter serverWriter;
         StreamReader serverReader;
 
-        string name;
-        long id;
+        string name = "Gasimo";
+        long id = 011010;
 
         bool isVerified = false;
 
         // Query of awaiting responses from server!
-        public Dictionary<string, Action> actions = new Dictionary<string, Action>();
+        public Dictionary<int, Action> actions = new Dictionary<int, Action>();
 
 
         public void Init(string address, int port)
@@ -60,10 +60,17 @@ namespace BetaOne
         /// Sends command to server directly
         /// </summary>
         /// <param name="cmd"></param>
-        void sendToServer(Command cmd)
+        void sendToServer(Command cmd, Action onResponse = null)
         {
             if(!disableDebug)
             ServerLogger.logTraffic(cmd, "PC(Direct)", "server");
+
+            // If we expect a response
+            if(onResponse != null && cmd.requestId != 0)
+            {
+                Console.WriteLine("Task created");
+                actions.Add(cmd.requestId, onResponse);
+            }
 
             serverWriter.WriteLineAsync(serializeCommand(cmd)).Wait();
             serverWriter.FlushAsync().Wait();
@@ -102,6 +109,7 @@ namespace BetaOne
 
         public async void commandHandler(Command cmd, TcpClient tcpServer)
         {
+            
 
             if (cmd == null)
                 return;
@@ -109,29 +117,43 @@ namespace BetaOne
             if(!disableDebug)
             ServerLogger.logTraffic(cmd, "server", "PC");
 
+
+            if (cmd.requestId != 0)
+            {
+                actions[cmd.requestId].Invoke();
+                return;
+            }
+
+
             switch (cmd.name)
             {
                 // Server asked for identity
                 case "ident":
                     {
-                        // Handle response code
-                        if (cmd.code == ReturnCodes.OK)
-                        {
-                            Console.WriteLine("I got verified.");
-                            isVerified = true;
-                            return;
-                        }
-
-                        if(cmd.code != ReturnCodes.IDENT_REQUESTED)
-                        {
-                            // Handle showing issues here!
-                        }
-
                         // Auth
 
-                        Command response = new Command("ident");
+                        Command response = new Command("ident", null, ReturnCodes.OK);
+                        response.requestId = 1;
                         response.content = new string[] { name, id.ToString() };
-                        sendToServer(response);
+
+                        // Await response!
+                        sendToServer(response, () => {
+
+                            // Handle response code
+                            if (cmd.code == ReturnCodes.OK)
+                            {
+                                Console.WriteLine("I got verified.");
+                                isVerified = true;
+                                return;
+                            }
+
+                            if (cmd.code != ReturnCodes.IDENT_REQUESTED)
+                            {
+                                // Handle showing issues here!
+
+                            }
+
+                        });
 
                         return;
                     }
@@ -146,6 +168,11 @@ namespace BetaOne
                             id = long.Parse(cmd.content[1]);
                         }
 
+                        return;
+                    }
+                case "echo":
+                    {
+                        Console.WriteLine("Echod: " + cmd.content[0]);
                         return;
                     }
 

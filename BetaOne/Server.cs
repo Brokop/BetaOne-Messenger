@@ -43,26 +43,25 @@ namespace BetaOne
 
         public void RunClient(TcpClient tcpClient)
         {
-            ServerLogger.logTraffic("Connected.", tcpClient.Client.RemoteEndPoint.ToString().Split(":")[0], "server");
+            ServerLogger.logTraffic("Connected.", tcpClient.Client.RemoteEndPoint.ToString(), "server");
             var reader = new StreamReader(tcpClient.GetStream());
             var writer = new StreamWriter(tcpClient.GetStream());
-            tcpClient.NoDelay = true;
+            // tcpClient.NoDelay = true;
 
             User u = new User();
             u.client = tcpClient;
+            u.writer = writer;
+
 
             // SEND IDENT()
             Command request = new Command("ident", null, ReturnCodes.IDENT_REQUESTED);
-            ServerLogger.logTraffic(request, "Server(Direct)", tcpClient.Client.RemoteEndPoint.ToString().Split(":")[0]);
-            writer.WriteLineAsync(serializeCommand(request)).Wait();
-            writer.Flush();
-            
+            sendToClient(request, u);
 
-            // sendToClient(new Command("ident", null, ReturnCodes.IDENT_REQUESTED), tcpClient).Wait();
 
-            // MUST IDENT
+            // AWAIT IDENT
             while (u.username == null)
             {
+
                 // RECEIVE IDENT
                 var line = reader.ReadLineAsync().Result;
 
@@ -89,13 +88,15 @@ namespace BetaOne
         /// Sends command to client
         /// </summary>
         /// <param name="cmd"></param>
-        async Task sendToClient(Command cmd, TcpClient tcpClient)
+        public void sendToClient(Command cmd, User client)
         {
-            ServerLogger.logTraffic(cmd, "Server(Direct)", tcpClient.Client.RemoteEndPoint.ToString().Split(":")[0]);
 
-            StreamWriter sw = new StreamWriter(tcpClient.GetStream()); 
-            await sw.WriteAsync((serializeCommand(cmd)));
-            await sw.FlushAsync();
+            client.writer.WriteLineAsync(serializeCommand(cmd)).Wait();
+            Console.WriteLine("sendToClient");
+            client.writer.Flush();
+
+            ServerLogger.logTraffic(cmd, "Server(Direct)", client.client.Client.RemoteEndPoint.ToString());
+
         }
 
 
@@ -149,7 +150,9 @@ namespace BetaOne
                         {
                             // SEND ALL OK
                             Command result = new Command("ident");
-                            sendToClient(result, user.client).Wait();
+                            result.requestId = cmd.requestId;
+
+                            sendToClient(result, user);
 
                             Console.WriteLine("User authenticated: " + user.id + " " + user.username);
 
@@ -160,7 +163,9 @@ namespace BetaOne
                             // NOT OK
                             Command result = new Command("ident");
                             result.code = ReturnCodes.BAD_DATA;
-                            sendToClient(result, user.client).Wait();
+                            result.requestId = cmd.requestId;
+
+                            sendToClient(result, user);
                             return;
                         }   
                     }
@@ -170,7 +175,7 @@ namespace BetaOne
                         // Bad length
                         if(cmd.content.Length < 2)
                         {
-                            sendToClient(new Command("ident", null, ReturnCodes.BAD_DATA), user.client).Wait();
+                            sendToClient(new Command("ident", null, ReturnCodes.BAD_DATA), user);
                             return;
                         }
 
@@ -178,14 +183,14 @@ namespace BetaOne
                         user.id = 101010;
 
                         // Send handle back
-                        sendToClient(new Command("register", new string[] {user.username, user.id.ToString()}, ReturnCodes.OK), user.client).Wait();
+                        sendToClient(new Command("register", new string[] {user.username, user.id.ToString()}, ReturnCodes.OK), user);
 
                         return;
                     }
 
                 default:
                     {
-                        sendToClient(new Command("result", null, ReturnCodes.BAD_REQUEST), user.client).Wait();
+                        sendToClient(new Command("result", null, ReturnCodes.BAD_REQUEST), user);
                         return;
                     }
             }

@@ -17,6 +17,7 @@ namespace BetaOne
         
         public TcpClient client;
 
+        public StreamWriter? writer;
 
     }
 }
