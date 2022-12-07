@@ -19,7 +19,7 @@ namespace BetaOne
 
         public static void logTraffic(object toLog, string from = "server", string target = "client")
         {
-            Console.WriteLine(String.Format("[{0} -> {1}] {2}", from, target, toLog.ToString()));
+            Console.WriteLine(String.Format("[{0} -> {1}] {2}".Pastel(Color.Gray), from, target, toLog.ToString()));
         }
 
 

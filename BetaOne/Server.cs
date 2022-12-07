@@ -28,7 +28,7 @@ namespace BetaOne
 
         void listenForClients()
         {
-            TcpListener tcpListener = new TcpListener(port);
+            TcpListener tcpListener = new TcpListener(System.Net.IPAddress.Loopback, port);
             tcpListener.Start();
             ServerLogger.logServerInfo("Starting server on " + port);
 
@@ -92,10 +92,9 @@ namespace BetaOne
         {
 
             client.writer.WriteLineAsync(serializeCommand(cmd)).Wait();
-            Console.WriteLine("sendToClient");
             client.writer.Flush();
 
-            ServerLogger.logTraffic(cmd, "Server(Direct)", client.client.Client.RemoteEndPoint.ToString());
+            ServerLogger.logTraffic(cmd, "server", client.client.Client.RemoteEndPoint.ToString());
 
         }
 
@@ -136,7 +135,7 @@ namespace BetaOne
             if (cmd == null)
                 return;
 
-            ServerLogger.logTraffic(cmd, user.client.Client.RemoteEndPoint.ToString().Split(":")[0], "server");
+            ServerLogger.logTraffic(cmd, user.client.Client.RemoteEndPoint.ToString(), "server");
 
             switch (cmd.name)
             {
