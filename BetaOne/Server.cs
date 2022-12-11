@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Reflection.PortableExecutable;
 using Newtonsoft.Json;
 using System.Net.Http;
+using LiteDB;
 
 namespace BetaOne
 {
@@ -16,6 +17,9 @@ namespace BetaOne
         int port;
         bool enableLogging = true;
 
+        LiteDatabase db;
+        ILiteCollection<User> users;
+
         public Server(int port)
         {
             this.port = port;
@@ -23,7 +27,24 @@ namespace BetaOne
 
         public void init()
         {
+            // Init database
+            initDatabase();
+
+            // Listen on PORT
             new Thread(listenForClients).Start();   
+        }
+
+
+        void initDatabase()
+        {
+
+            System.IO.Directory.CreateDirectory("Data");
+
+            db = new LiteDatabase(Environment.CurrentDirectory + @"\Data\MainData.db");
+                // Get a collection (or create, if doesn't exist)
+                users = db.GetCollection<User>("users");
+                users.EnsureIndex(x => x.username);
+            
         }
 
         void listenForClients()
@@ -48,7 +69,7 @@ namespace BetaOne
             var writer = new StreamWriter(tcpClient.GetStream());
             // tcpClient.NoDelay = true;
 
-            User u = new User();
+            UserSession u = new UserSession();
             u.client = tcpClient;
             u.writer = writer;
 
@@ -59,7 +80,7 @@ namespace BetaOne
 
 
             // AWAIT IDENT
-            while (u.username == null)
+            while (u.user == null)
             {
 
                 // RECEIVE IDENT
@@ -70,7 +91,7 @@ namespace BetaOne
             
             }
 
-            ServerLogger.logServerInfo("User authorized " + u.username);
+            ServerLogger.logServerInfo("User authorized " + u.user.username);
 
             // CLIENT LOOP
             while (true)
@@ -88,14 +109,14 @@ namespace BetaOne
         /// Sends command to client
         /// </summary>
         /// <param name="cmd"></param>
-        public void sendToClient(Command cmd, User client)
+        public void sendToClient(Command cmd, UserSession clientSession)
         {
 
-            client.writer.WriteLineAsync(serializeCommand(cmd)).Wait();
+            clientSession.writer.WriteLineAsync(serializeCommand(cmd)).Wait();
             Console.WriteLine("sendToClient");
-            client.writer.Flush();
+            clientSession.writer.Flush();
 
-            ServerLogger.logTraffic(cmd, "Server(Direct)", client.client.Client.RemoteEndPoint.ToString());
+            ServerLogger.logTraffic(cmd, "Server(Direct)", clientSession.client.Client.RemoteEndPoint.ToString());
 
         }
 
@@ -110,6 +131,7 @@ namespace BetaOne
         {
             return JsonConvert.SerializeObject(cmd);
         }
+
 
         public Command commandParser(string json)
         {
@@ -130,31 +152,44 @@ namespace BetaOne
 
         }
 
-        public void commandHandler(Command cmd, User user)
+
+        /// <summary>
+        /// Handle commands and responses
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <param name="session"></param>
+        public void commandHandler(Command cmd, UserSession session)
         {
 
             if (cmd == null)
                 return;
 
-            ServerLogger.logTraffic(cmd, user.client.Client.RemoteEndPoint.ToString().Split(":")[0], "server");
+            ServerLogger.logTraffic(cmd, session.client.Client.RemoteEndPoint.ToString().Split(":")[0], "server");
 
             switch (cmd.name)
             {
                 case "ident":
                     {
-                        user.username = cmd.content[0];
-                        user.id = long.Parse(cmd.content[1]);
 
                         // WAS OK?
-                        if(user.username != null && user.id != 0)
+                        if(cmd.content[0] != null && long.Parse(cmd.content[1]) != 0)
                         {
-                            // SEND ALL OK
                             Command result = new Command("ident");
                             result.requestId = cmd.requestId;
 
-                            sendToClient(result, user);
+                            User u = new User(cmd.content[0], long.Parse(cmd.content[1]));
 
-                            Console.WriteLine("User authenticated: " + user.id + " " + user.username);
+                            // If user does not exist
+                            if (!users.Exists(Query.EQ("id", cmd.content[1])))
+                            {
+                                result.code = ReturnCodes.DOES_NOT_EXIST;
+                                sendToClient(result, session);
+                                return;
+                            }
+
+
+                            sendToClient(result, session);
+                            Console.WriteLine("User authenticated: " + session.user.id + " " + session.user.username);
 
                             return;
                         }
@@ -165,7 +200,7 @@ namespace BetaOne
                             result.code = ReturnCodes.BAD_DATA;
                             result.requestId = cmd.requestId;
 
-                            sendToClient(result, user);
+                            sendToClient(result, session);
                             return;
                         }   
                     }
@@ -175,22 +210,22 @@ namespace BetaOne
                         // Bad length
                         if(cmd.content.Length < 2)
                         {
-                            sendToClient(new Command("ident", null, ReturnCodes.BAD_DATA), user);
+                            sendToClient(new Command("ident", null, ReturnCodes.BAD_DATA), session);
                             return;
                         }
 
-                        user.username = cmd.content[0];
-                        user.id = 101010;
+                        session.user.username = cmd.content[0];
+                        session.user.id = 101010;
 
                         // Send handle back
-                        sendToClient(new Command("register", new string[] {user.username, user.id.ToString()}, ReturnCodes.OK), user);
+                        sendToClient(new Command("register", new string[] {session.user.username, session.user.id.ToString()}, ReturnCodes.OK), session);
 
                         return;
                     }
 
                 default:
                     {
-                        sendToClient(new Command("result", null, ReturnCodes.BAD_REQUEST), user);
+                        sendToClient(new Command("result", null, ReturnCodes.BAD_REQUEST), session);
                         return;
                     }
             }

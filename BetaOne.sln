@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetaOne", "BetaOne\BetaOne.csproj", "{F9BE9482-B117-4B26-B79A-0F2F2C73D64E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetaOne Server", "BetaOne\BetaOne Server.csproj", "{F9BE9482-B117-4B26-B79A-0F2F2C73D64E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetaOne Messenger", "BetaOne Messenger\BetaOne Messenger.csproj", "{E752EB16-6CD2-4CF9-8B67-34D5B340B57C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,12 @@ Global
 		{F9BE9482-B117-4B26-B79A-0F2F2C73D64E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9BE9482-B117-4B26-B79A-0F2F2C73D64E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9BE9482-B117-4B26-B79A-0F2F2C73D64E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E752EB16-6CD2-4CF9-8B67-34D5B340B57C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E752EB16-6CD2-4CF9-8B67-34D5B340B57C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E752EB16-6CD2-4CF9-8B67-34D5B340B57C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E752EB16-6CD2-4CF9-8B67-34D5B340B57C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E752EB16-6CD2-4CF9-8B67-34D5B340B57C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E752EB16-6CD2-4CF9-8B67-34D5B340B57C}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

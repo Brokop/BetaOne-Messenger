@@ -9,11 +9,10 @@ using System.Net.Http;
 namespace BetaOne
 {
     [System.Serializable]
-    internal class User
+    public class UserSession
     {
 
-        public long? id = null;
-        public string username;
+        public User user;
         
         public TcpClient client;
 
