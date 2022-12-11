@@ -7,6 +7,10 @@
         public MainPage()
         {
             InitializeComponent();
+        
+            // Init connection to server
+        
+        
         }
 
         private void OnCounterClicked(object sender, EventArgs e)
