@@ -14,7 +14,7 @@ namespace BetaOne
 {
     internal class Client
     {
-        bool disableDebug = false;
+        bool disableDebug = true;
 
         StreamWriter serverWriter;
         StreamReader serverReader;
@@ -68,7 +68,6 @@ namespace BetaOne
             // If we expect a response
             if(onResponse != null && cmd.requestId != 0)
             {
-                Console.WriteLine("Task created");
                 actions.Add(cmd.requestId, onResponse);
             }
 

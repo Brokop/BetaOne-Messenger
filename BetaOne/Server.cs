@@ -49,7 +49,7 @@ namespace BetaOne
 
         void listenForClients()
         {
-            TcpListener tcpListener = new TcpListener(port);
+            TcpListener tcpListener = new TcpListener(System.Net.IPAddress.Loopback, port);
             tcpListener.Start();
             ServerLogger.logServerInfo("Starting server on " + port);
 
