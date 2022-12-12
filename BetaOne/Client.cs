@@ -22,6 +22,7 @@ namespace BetaOne
         string name = "Gasimo";
         long id = 011010;
 
+
         bool isVerified = false;
 
         // Query of awaiting responses from server!

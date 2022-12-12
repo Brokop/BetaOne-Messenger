@@ -25,6 +25,9 @@ namespace BetaOne
             this.port = port;
         }
 
+        /// <summary>
+        /// Initializes this server instance on PORT given in constructor.
+        /// </summary>
         public void init()
         {
             // Init database
@@ -62,7 +65,7 @@ namespace BetaOne
 
         }
 
-        public void RunClient(TcpClient tcpClient)
+        void RunClient(TcpClient tcpClient)
         {
             ServerLogger.logTraffic("Connected.", tcpClient.Client.RemoteEndPoint.ToString(), "server");
             var reader = new StreamReader(tcpClient.GetStream());
@@ -109,14 +112,13 @@ namespace BetaOne
         /// Sends command to client
         /// </summary>
         /// <param name="cmd"></param>
-        public void sendToClient(Command cmd, UserSession clientSession)
+        void sendToClient(Command cmd, UserSession clientSession)
         {
 
             clientSession.writer.WriteLineAsync(serializeCommand(cmd)).Wait();
-            Console.WriteLine("sendToClient");
             clientSession.writer.Flush();
 
-            ServerLogger.logTraffic(cmd, "Server(Direct)", clientSession.client.Client.RemoteEndPoint.ToString());
+            ServerLogger.logTraffic(cmd, "Server", clientSession.client.Client.RemoteEndPoint.ToString());
 
         }
 
@@ -127,12 +129,21 @@ namespace BetaOne
          *  COMMAND HANDLER AREA
          */
 
+        /// <summary>
+        /// Serialize command to JSON string
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
         public string serializeCommand(Command cmd)
         {
             return JsonConvert.SerializeObject(cmd);
         }
 
-
+        /// <summary>
+        /// Parse command from JSON string
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
         public Command commandParser(string json)
         {
             try 
@@ -164,7 +175,7 @@ namespace BetaOne
             if (cmd == null)
                 return;
 
-            ServerLogger.logTraffic(cmd, session.client.Client.RemoteEndPoint.ToString().Split(":")[0], "server");
+            ServerLogger.logTraffic(cmd, session.client.Client.RemoteEndPoint.ToString(), "server");
 
             switch (cmd.name)
             {
@@ -230,7 +241,5 @@ namespace BetaOne
                     }
             }
         }
-
-
     }
 }

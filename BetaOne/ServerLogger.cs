@@ -28,10 +28,24 @@ namespace BetaOne
             string errCode = (toLog.code == ReturnCodes.OK ? "" : "["+toLog.code.ToString()+"]");
             string contentSize = (toLog.content == null ? "" : "[Len: " + toLog.content.Length.ToString()+"]");
             string reqID = ((toLog.requestId != null && toLog.requestId != 0) ? "[Req: " + toLog.requestId.ToString() + "]" : "");
+            
+            string listContent = "";
 
-            Console.WriteLine(String.Format($"[{from} -> {target}]".Pastel(Color.Gray) +  $" {toLog.name} {contentSize} {errCode} {reqID}"));
+            if (toLog.content != null && toLog.content.Length > 0)
+            {
+                listContent = "[";
+
+                foreach (string content in toLog.content)
+                    listContent += (content + ", ");
+
+                listContent = listContent.Remove(listContent.Length - 2);
+                listContent += "]";
+                
+            }
+
+
+            Console.WriteLine(String.Format($"[{from} -> {target}]".Pastel(Color.Gray) +  $" {toLog.name} {errCode} {listContent.Pastel(Color.Tan)} {reqID}"));
         }
-
 
 
 
