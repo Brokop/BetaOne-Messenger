@@ -8,12 +8,8 @@ namespace BetaOne_Messenger
     public static class MauiProgram
     {
 
-        public static Client meClient = new Client();
-
         public static MauiApp CreateMauiApp()
         {
-
-            meClient.Init("127.0.0.1", 7767);
 
             var builder = MauiApp.CreateBuilder();
             builder
