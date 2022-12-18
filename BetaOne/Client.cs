@@ -61,7 +61,7 @@ namespace BetaOne
         /// Sends command to server directly
         /// </summary>
         /// <param name="cmd"></param>
-        void sendToServer(Command cmd, Action onResponse = null)
+        void sendToServer(Command cmd, Action? onResponse = null)
         {
             if(!disableDebug)
             ServerLogger.logTraffic(cmd, "PC(Direct)", "server");

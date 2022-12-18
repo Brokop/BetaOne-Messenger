@@ -14,9 +14,10 @@
         {
 
             // If first launch
-            if (!(CheckloadConfig())) ;
-                await Shell.Current.GoToAsync("//WelcomePage", true);
-
+            if (!(CheckloadConfig()))
+            {
+                await Navigation.PushAsync(new WelcomePage(), false);
+            }
         }
 
 

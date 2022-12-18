@@ -3,7 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BetaOne_Messenger.WelcomePage"
              Title="Welcome"
-             Loaded="ContentPage_Loaded">
+             Loaded="ContentPage_Loaded"
+             NavigationPage.HasBackButton="False">
+    
+    
+    
     <VerticalStackLayout Spacing="10" Padding="25" VerticalOptions="Center">
 
         <Label 
@@ -12,7 +16,9 @@
             FontSize="30"
             HorizontalOptions="Center" />
 
-        <Button Text="Login">
+        <Button Text="Login"
+                Clicked="ButtonLogin_Clicked"
+                x:Name="ButtonLogin">
         </Button>
 
         <Button Text="Register">

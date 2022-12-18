@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BetaOne_Messenger.LoginPage"
+             Title="Login"
+             Loaded="ContentPage_Loaded">
+
+    <ContentPage.Resources>
+        <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="Red" />
+        </Style>
+        <Style x:Key="ValidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="Green" />
+        </Style>
+    </ContentPage.Resources>
+
+
+    <VerticalStackLayout Spacing="10" Padding="25" VerticalOptions="Center">
+
+        <Label 
+            Text="β1 Messenger"
+            FontAttributes="Bold"
+            FontSize="30"
+            HorizontalOptions="Center" />
+
+
+
+
+        <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+
+            <Button Text="Return">
+            </Button>
+
+            <Button Text="Register">
+            </Button>
+
+        </HorizontalStackLayout>
+
+    </VerticalStackLayout>
+</ContentPage>

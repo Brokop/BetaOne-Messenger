@@ -33,12 +33,17 @@ public partial class WelcomePage : ContentPage
 
             IPAddress ipAddress = null;
 
-            bool success = IPAddress.TryParse(result, out ipAddress);
+            bool success = IPAddress.TryParse(ipformat[0], out ipAddress);
                 if(!success)
                 {
                     await DisplayAlert("Incorrect IP Format", "Please try again.", "Ok");
                     return;
-            }
+                }
+
+            await SecureStorage.SetAsync("serv_address", ipAddress.ToString());
+            await SecureStorage.SetAsync("serv_port", ipformat[1]);
+
+            IPLabel.Text = (await SecureStorage.Default.GetAsync("serv_address")) + ":" + (await SecureStorage.Default.GetAsync("serv_port"));
 
         }
         
@@ -55,5 +60,10 @@ public partial class WelcomePage : ContentPage
         }
 
         IPLabel.Text = (await SecureStorage.Default.GetAsync("serv_address")) + ":" + (await SecureStorage.Default.GetAsync("serv_port"));
+    }
+
+    private void ButtonLogin_Clicked(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new LoginPage(), true);
     }
 }
