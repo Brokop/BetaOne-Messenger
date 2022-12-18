@@ -17,4 +17,9 @@ public partial class LoginPage : ContentPage
 
         
     }
+
+    private void ButtonReturn_Clicked(object sender, EventArgs e)
+    {
+        Navigation.PopAsync();
+    }
 }

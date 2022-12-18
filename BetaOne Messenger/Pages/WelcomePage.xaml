@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BetaOne_Messenger.WelcomePage"
+             Title="Welcome"
+             Loaded="ContentPage_Loaded"
+             NavigationPage.HasBackButton="False"
+             >
+
+
+
+    <VerticalStackLayout Spacing="10" Padding="25" VerticalOptions="Center" MaximumWidthRequest="600">
+
+
+        <Label 
+            Text="β1 Messenger"
+            FontAttributes="Bold"
+            FontSize="30"
+            HorizontalOptions="Center" />
+
+        <Button Text="Login"
+                Clicked="ButtonLogin_Clicked"
+                x:Name="ButtonLogin">
+        </Button>
+
+        <Button Text="Register"
+                x:Name="ButtonRegister"
+                Clicked="ButtonRegister_Clicked">
+        </Button>
+
+        <FlexLayout Direction="Row"
+                AlignItems="Center"
+                JustifyContent="SpaceEvenly" Margin="0,10">
+
+            <HorizontalStackLayout HeightRequest="40">
+                <Label 
+                    VerticalOptions="Center"
+            x:Name="IPContextLabel"
+            Text="Initializing... "
+            TextColor="{StaticResource Gray400}"
+            />
+
+                <Label
+            VerticalOptions="Center"
+            x:Name="IPLabel"
+            Text=""
+            />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout HeightRequest="40" MaximumWidthRequest="120">
+                <Button 
+                    x:Name="ChangeServerButton"
+                    Text="Change"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource Primary}"
+                    Margin="10,0"
+                    Clicked="ChangeServerButton_Clicked"
+                    >
+                </Button>
+
+                <Button 
+                    x:Name="RetryServerButton"
+                    Text="Retry"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource Primary}"
+                    Margin="10,0"
+                    Clicked="RetryServerButton_Clicked"
+                    IsVisible="false"
+                    >
+                </Button>
+            </HorizontalStackLayout>
+
+
+        </FlexLayout>
+
+    </VerticalStackLayout>
+
+
+</ContentPage>

@@ -9,6 +9,9 @@ using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
 using System.Data;
 using System.ComponentModel.Design;
+using Microsoft.Maui;
+using BetaOne_Messenger;
+using CommunityToolkit.Maui.Views;
 
 namespace BetaOne
 {
@@ -28,9 +31,24 @@ namespace BetaOne
         public Dictionary<int, Action> actions = new Dictionary<int, Action>();
 
 
-        public void Init(string address, int port)
+
+        public bool Init(string address, int port)
         {
-            new Thread(() => RunClientAsync(address, port)).Start();
+            TcpClient tcpServer;
+
+            try
+            {
+                tcpServer = new TcpClient(address, port);
+            }
+            catch (Exception ex)
+            {
+                MauiProgram.client = null;
+                return false;
+            }
+
+            new Thread(() => RunClientAsync(tcpServer)).Start();
+            
+            return true;
         }
 
         /// <summary>
@@ -38,9 +56,9 @@ namespace BetaOne
         /// </summary>
         /// <param name="address"></param>
         /// <param name="port"></param>
-        public void RunClientAsync(string address, int port)
+        public void RunClientAsync(TcpClient tcpServer)
         {
-            var tcpServer = new TcpClient(address, port);
+            
             serverWriter = new StreamWriter(tcpServer.GetStream());
             tcpServer.NoDelay = true;
             serverReader = new StreamReader(tcpServer.GetStream());
@@ -62,11 +80,11 @@ namespace BetaOne
         /// <param name="cmd"></param>
         void sendToServer(Command cmd, Action onResponse = null)
         {
-            if(!disableDebug)
-            ServerLogger.logTraffic(cmd, "PC(Direct)", "server");
+            if (!disableDebug)
+                ServerLogger.logTraffic(cmd, "PC(Direct)", "server");
 
             // If we expect a response
-            if(onResponse != null && cmd.requestId != 0)
+            if (onResponse != null && cmd.requestId != 0)
             {
                 actions.Add(cmd.requestId, onResponse);
             }
@@ -108,13 +126,13 @@ namespace BetaOne
 
         public async void commandHandler(Command cmd, TcpClient tcpServer)
         {
-            
+
 
             if (cmd == null)
                 return;
 
-            if(!disableDebug)
-            ServerLogger.logTraffic(cmd, "server", "PC");
+            if (!disableDebug)
+                ServerLogger.logTraffic(cmd, "server", "PC");
 
 
             if (cmd.requestId != 0)
@@ -136,7 +154,8 @@ namespace BetaOne
                         response.content = new string[] { name, id.ToString() };
 
                         // Await response!
-                        sendToServer(response, () => {
+                        sendToServer(response, () =>
+                        {
 
                             // Handle response code
                             if (cmd.code == ReturnCodes.OK)
@@ -161,7 +180,7 @@ namespace BetaOne
                 case "register":
                     {
 
-                        if(cmd.code == ReturnCodes.OK)
+                        if (cmd.code == ReturnCodes.OK)
                         {
                             name = cmd.content[0];
                             id = long.Parse(cmd.content[1]);
