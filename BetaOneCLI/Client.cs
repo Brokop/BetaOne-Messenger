@@ -9,9 +9,7 @@ using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
 using System.Data;
 using System.ComponentModel.Design;
-using Microsoft.Maui;
-using BetaOne_Messenger;
-using CommunityToolkit.Maui.Views;
+using BetaOneCLI;
 
 namespace BetaOne
 {
@@ -40,9 +38,8 @@ namespace BetaOne
             {
                 tcpServer = new TcpClient(address, port);
             }
-            catch
+            catch(Exception e)
             {
-                MauiProgram.client = null;
                 return false;
             }
 
@@ -76,10 +73,10 @@ namespace BetaOne
         /// Sends command to server directly
         /// </summary>
         /// <param name="cmd"></param>
-        public void sendToServer(Command cmd, Action onResponse = null)
+        void sendToServer(Command cmd, Action onResponse = null)
         {
             if (!disableDebug)
-                ServerLogger.logTraffic(cmd, "PC(Direct)", "server");
+                // ServerLogger.logTraffic(cmd, "PC(Direct)", "server");
 
             // If we expect a response
             if (onResponse != null && cmd.requestId != 0)
@@ -91,17 +88,6 @@ namespace BetaOne
             serverWriter.FlushAsync().Wait();
         }
 
-
-        public bool login(string username, string password)
-        {
-
-            sendToServer(new BetaOne.Command("ident", new string[] {username, password}), () => {
-
-                
-
-            });
-
-        }
 
 
         /*
@@ -121,7 +107,7 @@ namespace BetaOne
             }
             catch (Exception e)
             {
-                ServerLogger.LogError("JSON Parse error on: " + json + "\n" + e.Message);
+                Notification.Show("JSON Parse error on: " + json + "\n" + e.Message);
 #if DEBUG
                 throw (e);
 #endif                
@@ -141,7 +127,7 @@ namespace BetaOne
                 return;
 
             if (!disableDebug)
-                ServerLogger.logTraffic(cmd, "server", "PC");
+                //ServerLogger.logTraffic(cmd, "server", "PC");
 
 
             if (cmd.requestId != 0)

@@ -22,4 +22,24 @@ public partial class LoginPage : ContentPage
     {
         Navigation.PopAsync();
     }
+
+    /// <summary>
+    /// Login
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+        MauiProgram.client.login(email_field.Text, password_field.Text);
+    }
+
+    private void OnResponse()
+    {
+
+    }
+
+
+
+
+
 }

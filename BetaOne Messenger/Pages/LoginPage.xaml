@@ -26,7 +26,8 @@
 
             <Entry
             Placeholder="Enter email"
-            Keyboard="Email">
+            Keyboard="Email"
+                x:Name="email_field">
                 <Entry.Behaviors>
                     <toolkit:EmailValidationBehavior 
                 InvalidStyle="{StaticResource InvalidEntryStyle}"
@@ -43,6 +44,7 @@
 
             <Entry
             Placeholder="Enter password"
+                x:Name="password_field"
             Keyboard="Default"
             IsPassword="True">
                 <Entry.Behaviors>
@@ -61,7 +63,7 @@
                     Clicked="ButtonReturn_Clicked">
             </Button>
 
-            <Button Text="Login" HorizontalOptions="End">
+            <Button Text="Login" HorizontalOptions="End" Clicked="Button_Clicked">
             </Button>
 
         </Grid>

@@ -234,6 +234,14 @@ namespace BetaOne
                         return;
                     }
 
+
+                case "conversation":
+                    {
+
+                        return;
+                    }
+
+
                 default:
                     {
                         sendToClient(new Command("result", null, ReturnCodes.BAD_REQUEST), session);

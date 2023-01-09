@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BetaOneCLI": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

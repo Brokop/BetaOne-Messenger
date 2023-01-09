@@ -62,23 +62,19 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
-	  <ApplicationId>com.gasimo.bonem</ApplicationId>
-	  <Optimize>False</Optimize>
+	  <ApplicationId>com.gasimo.bonemessenger</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
-	  <ApplicationId>com.gasimo.bonem</ApplicationId>
-	  <Optimize>False</Optimize>
+	  <ApplicationId>com.gasimo.bonemessenger</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
-	  <ApplicationId>com.gasimo.bonem</ApplicationId>
-	  <Optimize>False</Optimize>
+	  <ApplicationId>com.gasimo.bonemessenger</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
-	  <ApplicationId>com.gasimo.bonem</ApplicationId>
-	  <Optimize>False</Optimize>
+	  <ApplicationId>com.gasimo.bonemessenger</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
@@ -91,24 +87,19 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.gasimo.bone_messenger</ApplicationId>
-	  <Optimize>False</Optimize>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.gasimo.bone_messenger</ApplicationId>
-	  <Optimize>False</Optimize>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
 	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
-	  <ApplicationId>com.gasimo.bonem</ApplicationId>
-	  <Optimize>False</Optimize>
-	  <DebugSymbols>False</DebugSymbols>
+	  <ApplicationId>com.gasimo.boneMessenger</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
-	  <ApplicationId>com.gasimo.bonem</ApplicationId>
-	  <Optimize>False</Optimize>
+	  <ApplicationId>com.gasimo.boneMessenger</ApplicationId>
 	</PropertyGroup>
 
 	<ItemGroup>

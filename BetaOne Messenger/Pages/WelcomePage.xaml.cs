@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
-using CommunityToolkit.Maui.Views;
 using BetaOne_Messenger.Pages;
 
 namespace BetaOne_Messenger;
